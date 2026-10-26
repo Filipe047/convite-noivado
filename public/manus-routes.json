@@ -1,0 +1,7 @@
+{
+  "routes": [
+    { "path": "/", "title": "Filipe & Mayika — Noivado" },
+    { "path": "/confirmar.html", "title": "Confirmar presença — Filipe & Mayika" },
+    { "path": "/admin.html", "title": "Administração — Filipe & Mayika" }
+  ]
+}
