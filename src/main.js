@@ -13,7 +13,10 @@ const PHOTO_MOMENTS = [
 ];
 
 const app = document.querySelector('#app');
-const isAdmin = window.location.pathname.endsWith('admin.html');
+const isAdmin =
+  window.location.pathname === '/admin' ||
+  window.location.pathname.endsWith('/admin.html');
+
 const params = new URLSearchParams(window.location.search);
 const token = params.get(CONFIG.ADMIN_TOKEN_PARAM);
 
