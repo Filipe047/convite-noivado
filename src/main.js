@@ -34,6 +34,11 @@ const PHOTO_MOMENTS = [
     title: "O nosso momento",
     text: "Uma memória para partilhar com quem amam.",
   },
+  {
+    image: "/gallery/moment-04.jpg",
+    title: "Para Sempre",
+    text: "Uma história para sempre recordar.",
+  },
 ];
 
 const app = document.querySelector("#app");
@@ -210,12 +215,15 @@ function renderHome() {
           <p class="hero-intro">Convidamos você para celebrar connosco um momento muito especial.</p>
           <a class="primary-button" href="/confirmar.html#confirmar">Confirmar presença <span>↗</span></a>
         </div>
-        <div class="hero-card" aria-label="Detalhes do evento">
-          <div class="monogram">F <span>&</span> M</div>
-          <div class="rule"></div>
-          <p class="card-label">Sábado</p><p class="event-date">28 <small>de</small> Novembro</p><p class="event-year">2026 · às 16h00</p>
-          <div class="location"><span class="pin">⌖</span><span>Palanca, Rua F<br />Quintal em frente ao campo<br /><small>Próximo da Igreja IEBA</small></span></div>
-        </div>
+      <div class="hero-card" aria-label="Detalhes do evento">
+  <div class="monogram">Filipe <span>&</span> Mayika</div>
+  <div class="rule"></div>
+  <p class="card-label">Sábado</p><p class="event-date">28 <small>de</small> Novembro</p><p class="event-year">2026 · às 16h00</p>
+  <a class="location" href="https://maps.app.goo.gl/wyxcRXd3PfjaYABQ6" target="_blank" rel="noopener noreferrer" aria-label="Abrir localização no Google Maps">
+    <span class="pin">⌖</span>
+    <span>Palanca, Rua F<br />Quintal em frente ao campo<br /><small>Próximo da Igreja IEBA</small><br /><small class="map-cta">Ver no mapa ↗</small></span>
+  </a>
+</div>
       </div>
     </section>
     <section class="timer-section section-wrap"><div class="section-overline">A contagem começou</div>${countdownMarkup()}<p class="timer-note">Até celebrarmos este passo de fé, amor e compromisso.</p></section>
