@@ -118,7 +118,7 @@ function shell(content, admin = false) {
     <header class="site-header">
       <a class="wordmark" href="/" aria-label="Filipe e Mayika — início"><span>F</span><span class="amp">&</span><span>M</span></a>
       <div class="header-note">${admin ? "Área reservada" : "Um passo de fé, amor e compromisso"}</div>
-      ${admin ? '<a class="back-link" href="/">Voltar ao convite &#8599;</a>' : ""}
+      ${admin ? '<a class="back-link" href="/">Voltar ao convite <i class="fa-solid fa-square-arrow-up-right"></i></a>' : ""}
     </header>
     ${content}
     <footer class="site-footer"><span>Filipe & Mayika</span><span>28.11.2026 · Palanca</span></footer>
@@ -223,7 +223,7 @@ function renderHome() {
           <p class="kicker">Com alegria e gratidão a Deus,</p>
           <h1>O nosso<br /><em>noivado.</em></h1>
           <p class="hero-intro">Convidamos você para celebrar connosco um momento muito especial.</p>
-          <a class="primary-button" href="/confirmar.html#confirmar">Confirmar presença <span>&#8599;</span></a>
+          <a class="primary-button" href="/confirmar.html#confirmar">Confirmar presença <span><i class="fa-solid fa-square-arrow-up-right"></i></span></a>
         </div>
       <div class="hero-card" aria-label="Detalhes do evento">
   <div class="monogram">Filipe <span>&</span> Mayika</div>
@@ -231,7 +231,7 @@ function renderHome() {
   <p class="card-label">Sábado</p><p class="event-date">28 <small>de</small> Novembro</p><p class="event-year">2026 · às 16h00</p>
   <a class="location" href="https://maps.app.goo.gl/wyxcRXd3PfjaYABQ6" target="_blank" rel="noopener noreferrer" aria-label="Abrir localização no Google Maps">
     <span class="pin">⌖</span>
-    <span>Palanca, Rua F<br />Quintal em frente ao campo<br /><small>Próximo da Igreja IEBA</small><br /><small class="map-cta">Ver no mapa &#8599;</small></span>
+    <span>Palanca, Rua F<br />Quintal em frente ao campo<br /><small>Próximo da Igreja IEBA</small><br /><small class="map-cta">Ver no mapa <i class="fa-solid fa-square-arrow-up-right"></i></small></span>
   </a>
 </div>
       </div>
@@ -250,7 +250,7 @@ function renderHome() {
 }
 
 function renderRsvpForm(container) {
-  container.innerHTML = `<form id="rsvp-form" class="rsvp-form"><p class="form-intro">Será uma alegria saber que estará connosco. Deixe os seus dados abaixo.</p><label class="field-label" for="name">Nome completo <input id="name" name="name" type="text" autocomplete="name" required placeholder="Digite o seu nome" /></label><label class="field-label" for="phone">Telefone <input id="phone" name="phone" type="tel" autocomplete="tel" required placeholder="Digite o seu telefone" /></label><label class="field-label" for="note">Mensagem <textarea id="note" name="note" rows="3" placeholder="Uma mensagem para os noivos (opcional)"></textarea></label><button class="primary-button full-button" type="submit">Confirmar presença <span>&#8599;</span></button><div id="form-feedback" aria-live="polite"></div></form>`;
+  container.innerHTML = `<form id="rsvp-form" class="rsvp-form"><p class="form-intro">Será uma alegria saber que estará connosco. Deixe os seus dados abaixo.</p><label class="field-label" for="name">Nome completo <input id="name" name="name" type="text" autocomplete="name" required placeholder="Digite o seu nome" /></label><label class="field-label" for="phone">Telefone <input id="phone" name="phone" type="tel" autocomplete="tel" required placeholder="Digite o seu telefone" /></label><label class="field-label" for="note">Mensagem <textarea id="note" name="note" rows="3" placeholder="Uma mensagem para os noivos (opcional)"></textarea></label><button class="primary-button full-button" type="submit">Confirmar presença <span><i class="fa-solid fa-square-arrow-up-right"></i></span></button><div id="form-feedback" aria-live="polite"></div></form>`;
   document
     .querySelector("#rsvp-form")
     .addEventListener("submit", async (event) => {
@@ -273,7 +273,7 @@ function renderRsvpForm(container) {
         feedback.innerHTML = `<p class="form-error" role="alert">${escapeHtml(error.message)} Tente novamente.</p>`;
       }
       button.disabled = false;
-      button.innerHTML = "Confirmar presença <span>&#8599;</span>";
+      button.innerHTML = `Confirmar presença <span><i class="fa-solid fa-square-arrow-up-right"></i></span>`;
     });
 }
 
