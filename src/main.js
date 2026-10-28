@@ -221,7 +221,7 @@ function renderRsvpForm(container) {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data),
         }).catch(() => {});
-        
+
         feedback.innerHTML =
           '<div class="success-message" role="status"><strong>Presença confirmada.</strong><p>Ficamos muito felizes por contar consigo. Até ao grande dia!</p></div>';
       } catch (error) {
