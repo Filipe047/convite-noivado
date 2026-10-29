@@ -26,8 +26,8 @@ export function renderMessagesCarousel() {
     <div class="msg-carousel" data-msg-carousel>
       <div class="msg-track" data-msg-track tabindex="0" role="region" aria-roledescription="carrossel" aria-label="Mensagens dos convidados"></div>
       <div class="msg-controls" data-msg-controls>
-        <button type="button" class="msg-arrow" data-msg-prev aria-label="Mensagem anterior">←</button>
-        <button type="button" class="msg-arrow" data-msg-next aria-label="Próxima mensagem">→</button>
+        <button type="button" class="msg-arrow" data-msg-prev aria-label="Mensagem anterior"><span class="fa-solid fa-chevron-left"></span></button>
+        <button type="button" class="msg-arrow" data-msg-next aria-label="Próxima mensagem"><span class="fa-solid fa-chevron-right"></span></button>
       </div>
     </div>
   </section>`;

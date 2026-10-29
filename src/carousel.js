@@ -46,8 +46,8 @@ export function renderPhotoCarousel(moments) {
     </div>
     <div class="gallery" data-carousel role="region" aria-roledescription="carrossel" aria-label="Fotografias dos noivos" tabindex="0">
       <div class="gallery-track">${slides}</div>
-      <button class="gallery-arrow gallery-prev" type="button" aria-label="Momento anterior">←</button>
-      <button class="gallery-arrow gallery-next" type="button" aria-label="Próximo momento">→</button>
+      <button class="gallery-arrow gallery-prev" type="button" aria-label="Momento anterior"><span class="fa-solid fa-chevron-left"></span></button>
+      <button class="gallery-arrow gallery-next" type="button" aria-label="Próximo momento"><span class="fa-solid fa-chevron-right"></span></button>
       <div class="gallery-dots">${dots}</div>
     </div>
   </section>`;
