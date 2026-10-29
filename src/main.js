@@ -217,53 +217,53 @@ function renderHome() {
 
 function renderRsvpForm(container) {
   container.innerHTML = `<form id="rsvp-form" class="rsvp-form"><p class="form-intro">Será uma alegria saber que estará connosco. Deixe os seus dados abaixo.</p><label class="field-label" for="name"><span class="icon-field"><i class="fa-solid fa-user-pen"></i></span>Nome completo <input id="name" name="name" type="text" autocomplete="name" required placeholder="Digite o seu nome" /></label><label class="field-label" for="phone"><span class="icon-field"><i class="fa-solid fa-phone"></i></span>Telefone <input id="phone" name="phone" type="tel" autocomplete="tel" required placeholder="Digite o seu telefone" /></label><label class="field-label" for="note"><span class="icon-field"><i class="fa-solid fa-message"></i></span>Mensagem <textarea id="note" name="note" rows="3" placeholder="Uma mensagem para os noivos (opcional)"></textarea></label><button class="primary-button full-button" type="submit">Confirmar presença <span><i class="fa-solid fa-square-arrow-up-right"></i></span></button><div id="form-feedback" aria-live="polite"></div></form>`;
-  document
-    .querySelector("#rsvp-form")
-    .addEventListener("submit", async (event) => {
-      event.preventDefault();
-      const form = event.currentTarget;
-      const feedback = form.querySelector("#form-feedback");
-      if (!form.reportValidity()) return;
-      const button = form.querySelector("button");
-      button.disabled = true;
-      button.innerHTML = '<span class="spinner"></span> A guardar…';
-      try {
-        const data = {
-          name: form.name.value.trim(),
-          phone: form.phone.value.trim(),
-          note: form.note.value.trim(),
-        };
-        await apiRsvp(data);
-        if (data.note)
-          messagesCarousel.add({
-            name: data.name,
-            note: data.note,
-            timestamp: new Date().toISOString(),
-          });
-        fetch("/api/send-confirmation", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
-        }).catch(() => {});
+    document
+      .querySelector("#rsvp-form")
+      .addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const form = event.currentTarget;
+        const feedback = form.querySelector("#form-feedback");
+        if (!form.reportValidity()) return;
+        const button = form.querySelector("button");
+        button.disabled = true;
+        button.innerHTML = '<span class="spinner"></span> A guardar…';
+        try {
+          const data = {
+            name: form.name.value.trim(),
+            phone: form.phone.value.trim(),
+            note: form.note.value.trim(),
+          };
+          await apiRsvp(data);
+          if (data.note)
+            messagesCarousel.add({
+              name: data.name,
+              note: data.note,
+              timestamp: new Date().toISOString(),
+            });
+          fetch("/api/send-confirmation", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+          }).catch(() => {});
 
-        feedback.innerHTML =
-          '<div class="success-message" role="status"><strong>Presença confirmada.</strong><p>Ficamos muito felizes por contar consigo. Até ao grande dia!</p></div>';
-      } catch (error) {
-        feedback.innerHTML = `<p class="form-error" role="alert">${escapeHtml(error.message)} Tente novamente.</p>`;
-      }
-      button.disabled = false;
-      button.innerHTML = `Confirmar presença <span><i class="fa-solid fa-square-arrow-up-right"></i></span>`;
-    });
-}
+          feedback.innerHTML =
+            '<div class="success-message" role="status"><strong>Presença confirmada.</strong><p>Ficamos muito felizes por contar consigo. Até ao grande dia!</p></div>';
+        } catch (error) {
+          feedback.innerHTML = `<p class="form-error" role="alert">${escapeHtml(error.message)} Tente novamente.</p>`;
+        }
+        button.disabled = false;
+        button.innerHTML = `Confirmar presença <span><i class="fa-solid fa-square-arrow-up-right"></i></span>`;
+      });
+  }
 
-async function renderAdmin() {
-  app.innerHTML = shell(
-    `<main class="admin-main section-wrap"><div class="eyebrow"><span class="dot"></span> Visão geral · RSVP</div><div class="admin-heading"><div><h1>Presenças<br /><em>confirmadas.</em></h1><p>Uma vista simples para acompanhar quem estará connosco.</p></div><button class="secondary-button" id="refresh">Atualizar ↻</button></div><div id="admin-content"><div class="loading-state"><span class="spinner"></span><p>A carregar respostas…</p></div></div></main>`,
-    true,
-  );
-  document.querySelector("#refresh").addEventListener("click", loadAdmin);
-  await loadAdmin();
-}
+  async function renderAdmin() {
+    app.innerHTML = shell(
+      `<main class="admin-main section-wrap"><div class="eyebrow"><span class="dot"></span> Visão geral · RSVP</div><div class="admin-heading"><div><h1>Presenças<br /><em>confirmadas.</em></h1><p>Uma vista simples para acompanhar quem estará connosco.</p></div><button class="secondary-button" id="refresh">Atualizar ↻</button></div><div id="admin-content"><div class="loading-state"><span class="spinner"></span><p>A carregar respostas…</p></div></div></main>`,
+      true,
+    );
+    document.querySelector("#refresh").addEventListener("click", loadAdmin);
+    await loadAdmin();
+  }
 
 async function loadAdmin() {
   const target = document.querySelector("#admin-content");

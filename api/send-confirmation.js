@@ -75,7 +75,7 @@ export default async function handler(req, res) {
     return res.status(500).json({ ok: false, error: "SMTP não configurado." });
 
   // Destinatários: apenas os noivos (pode ser sobreposto por NOTIFY_EMAIL, separado por vírgulas)
-  const recipients = (process.env.NOTIFY_EMAIL || "filipycr20@gmail.com,mayikamakasi@gmail.com")
+  const recipients = (process.env.NOTIFY_EMAIL || "filipycr20@gmail.com") //mayikamakasi@gmail.com
     .split(",")
     .map((e) => e.trim())
     .filter(Boolean);
