@@ -59,8 +59,18 @@ function doGet(event) {
   }
 }
 
+function normalizePhone(value) {
+  let digits = String(value || '').replace(/\D/g, '');
+  if (digits.startsWith('244') && digits.length > 9) digits = digits.slice(3);
+  return digits;
+}
+
 function doPost(event) {
+  const lock = LockService.getScriptLock();
   try {
+    // Fila: só uma requisição de cada vez
+    lock.waitLock(10000);
+
     const body = JSON.parse(event.postData.contents || '{}');
     const name = String(body.name || '').trim();
     const phone = String(body.phone || '').trim();
@@ -68,20 +78,31 @@ function doPost(event) {
     if (!name || !phone) return jsonOutput({ ok: false, error: 'Nome e telefone são obrigatórios.' });
 
     const sheet = getSheet();
+    const lastRow = sheet.getLastRow();
     const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0].map(String);
-    const values = {
-      timestamp: new Date(),
-      name,
-      phone,
-      note,
-      status: 'confirmed',
-    };
-    const targetRow = sheet.getLastRow() + 1;
-    headers.forEach((header, index) => {
-      if (Object.prototype.hasOwnProperty.call(values, header)) sheet.getRange(targetRow, index + 1).setValue(values[header]);
-    });
-    return jsonOutput({ ok: true, guest: publicResponse(values) });
+
+    // --- Verificação de duplicado por telefone ---
+    const phoneCol = headers.indexOf('phone');
+    const newPhoneKey = normalizePhone(phone);
+    if (phoneCol !== -1 && lastRow > 1) {
+      const existing = sheet.getRange(2, phoneCol + 1, lastRow - 1, 1).getValues();
+      const found = existing.some(row => normalizePhone(row[0]) === newPhoneKey);
+      if (found) {
+        return jsonOutput({
+          ok: true,
+          guest: { ...publicResponse({ name, phone, note, status: 'confirmed', timestamp: new Date() }), duplicate: true },
+        });
+      }
+    }
+
+    const values = { timestamp: new Date(), name, phone, note, status: 'confirmed' };
+    const row = headers.map(header => (Object.prototype.hasOwnProperty.call(values, header) ? values[header] : ''));
+    sheet.appendRow(row);
+
+    return jsonOutput({ ok: true, guest: { ...publicResponse(values), duplicate: false } });
   } catch (error) {
     return jsonOutput({ ok: false, error: error.message });
+  } finally {
+    lock.releaseLock();
   }
 }
