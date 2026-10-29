@@ -1,5 +1,6 @@
 import { CONFIG } from "./config.js";
 import { renderPhotoCarousel, startPhotoCarousel } from "./carousel.js";
+import { renderMessagesCarousel, startMessagesCarousel } from "./messages.js";
 import "./styles.css";
 
 const DEMO_GUESTS = [
@@ -21,8 +22,7 @@ const DEMO_GUESTS = [
 
 const PHOTO_MOMENTS = [
   {
-    image:
-      "https://res.cloudinary.com/jmnylxfb/image/upload/f_auto,q_auto/moment-01",
+    image: "https://res.cloudinary.com/jmnylxfb/image/upload/f_auto,q_auto/moment-01",
     title: "Um começo bonito",
     text: "Onde a nossa história começou.",
   },
@@ -115,6 +115,22 @@ async function apiAdmin() {
   return payload.guests || [];
 }
 
+let messagesCarousel = { add() {} };
+
+async function apiMessages() {
+  if (!CONFIG.SHEETS_ENDPOINT) {
+    return demoReadAll().map(({ name, note, timestamp }) => ({
+      name,
+      note,
+      timestamp,
+    }));
+  }
+  const response = await fetch(`${CONFIG.SHEETS_ENDPOINT}?action=messages`);
+  const payload = await response.json();
+  if (!response.ok || payload.ok === false) return [];
+  return payload.messages || [];
+}
+
 function shell(content, admin = false) {
   return `<div class="page-shell ${admin ? "admin-shell" : ""}">
       <header class="site-header">
@@ -186,11 +202,13 @@ function renderHome() {
       </section>
       <section class="timer-section section-wrap"><div class="section-overline">A contagem começou</div>${countdownMarkup()}<p class="timer-note">Até celebrarmos este passo de fé, amor e compromisso.</p></section>
       <section class="invite-section section-wrap"><div class="section-overline">Uma presença que importa</div><div class="invite-grid"><h2>O seu lugar<br /><em>é connosco.</em></h2><div><p>Este dia será ainda mais bonito com as pessoas que amamos por perto. Use o link “Confirmar presença” no seu convite em PDF.</p><p class="small-note">Basta informar o seu nome, telefone e, se quiser, deixar uma mensagem.</p></div></div></section>
-     ${renderPhotoCarousel(PHOTO_MOMENTS)}
+        ${renderPhotoCarousel(PHOTO_MOMENTS)}
+        ${renderMessagesCarousel()}
       <section id="confirmar" class="rsvp-section section-wrap"><div class="rsvp-card"><div class="rsvp-title"><div class="section-overline">RSVP</div><h2>Vamos contar<br /><em>com você?</em></h2><p class="rsvp-subtitle">Preencha os seus dados para confirmar a presença.</p></div><div id="rsvp-content"></div></div></section>
     </main>`);
   startCountdown();
   startPhotoCarousel();
+  messagesCarousel = startMessagesCarousel(apiMessages);
   const content = document.querySelector("#rsvp-content");
   renderRsvpForm(content);
   if (window.location.hash === "#confirmar")
@@ -198,7 +216,7 @@ function renderHome() {
 }
 
 function renderRsvpForm(container) {
-  container.innerHTML = `<form id="rsvp-form" class="rsvp-form"><p class="form-intro">Será uma alegria saber que estará connosco. Deixe os seus dados abaixo.</p><label class="field-label" for="name">Nome completo <input id="name" name="name" type="text" autocomplete="name" required placeholder="Digite o seu nome" /></label><label class="field-label" for="phone">Telefone <input id="phone" name="phone" type="tel" autocomplete="tel" required placeholder="Digite o seu telefone" /></label><label class="field-label" for="note">Mensagem <textarea id="note" name="note" rows="3" placeholder="Uma mensagem para os noivos (opcional)"></textarea></label><button class="primary-button full-button" type="submit">Confirmar presença <span><i class="fa-solid fa-square-arrow-up-right"></i></span></button><div id="form-feedback" aria-live="polite"></div></form>`;
+  container.innerHTML = `<form id="rsvp-form" class="rsvp-form"><p class="form-intro">Será uma alegria saber que estará connosco. Deixe os seus dados abaixo.</p><label class="field-label" for="name"><span class="icon-field"><i class="fa-solid fa-user-pen"></i></span>Nome completo <input id="name" name="name" type="text" autocomplete="name" required placeholder="Digite o seu nome" /></label><label class="field-label" for="phone"><span class="icon-field"><i class="fa-solid fa-phone"></i></span>Telefone <input id="phone" name="phone" type="tel" autocomplete="tel" required placeholder="Digite o seu telefone" /></label><label class="field-label" for="note"><span class="icon-field"><i class="fa-solid fa-message"></i></span>Mensagem <textarea id="note" name="note" rows="3" placeholder="Uma mensagem para os noivos (opcional)"></textarea></label><button class="primary-button full-button" type="submit">Confirmar presença <span><i class="fa-solid fa-square-arrow-up-right"></i></span></button><div id="form-feedback" aria-live="polite"></div></form>`;
   document
     .querySelector("#rsvp-form")
     .addEventListener("submit", async (event) => {
@@ -216,6 +234,12 @@ function renderRsvpForm(container) {
           note: form.note.value.trim(),
         };
         await apiRsvp(data);
+        if (data.note)
+          messagesCarousel.add({
+            name: data.name,
+            note: data.note,
+            timestamp: new Date().toISOString(),
+          });
         fetch("/api/send-confirmation", {
           method: "POST",
           headers: { "Content-Type": "application/json" },

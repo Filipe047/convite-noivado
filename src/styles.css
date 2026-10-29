@@ -249,6 +249,13 @@ h2 em {
   color: var(--orange);
   font-size: 20px;
 }
+
+.icon-field {
+  color: var(--orange);
+  font-size: 11px;
+  margin-right: 6px;
+}
+
 .location small {
   color: var(--ink);
   font-size: 10px;
@@ -562,8 +569,9 @@ fieldset {
 }
 .field-label {
   display: block;
-  font-size: 10px;
-  color: var(--muted);
+  font-size: 11px;
+  color: var(--ink);
+  font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   margin: 16px 0;
@@ -577,6 +585,7 @@ fieldset {
   border-bottom: 1px solid var(--line);
   background: transparent;
   color: var(--ink);
+  font-weight: normal !important;
   padding: 10px 0;
   outline: 0;
   resize: vertical;
